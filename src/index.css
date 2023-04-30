@@ -12,7 +12,7 @@ code {
     monospace;
 }
 
-.ffButton {
+/* .ffButton {
   align-items: center;
   background-clip: padding-box;
   background-color: #fa6400;
@@ -23,14 +23,14 @@ code {
   color: #fff;
   cursor: pointer;
   display: inline-flex;
-  /* font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif; */
+  /* font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif; 
   font-size: 16px;
   font-weight: 600;
   justify-content: center;
   line-height: 1.25;
   margin: 0;
   min-height: 3rem;
-  /* padding: calc(.875rem - 1px) calc(1.5rem - 1px); */
+  /* padding: calc(.875rem - 1px) calc(1.5rem - 1px); 
   position: relative;
   text-decoration: none;
   transition: all 250ms;
@@ -80,8 +80,26 @@ code {
   height: 100px;
   width: 100%;
   margin-bottom: 15px;
-}
+} */
 
 .mainContent {
+  margin-top: 3px;
+  margin-bottom: 3px;
   margin-left: 67px;
+}
+
+.ffInputFull {
+  width: 100%;
+}
+
+.ffInputHalf {
+  width: 50%;
+}
+
+.ant-click-animating-node {
+  display: none;
+}
+
+.nav-style {
+  position: fixed !important;
 }

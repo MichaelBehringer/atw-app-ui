@@ -1,5 +1,7 @@
 import {Route, Routes} from "react-router-dom";
 import Planner from "./components/Planner";
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React from 'react';
 
 // Be sure to include styles at some point, probably during your bootstraping
@@ -11,16 +13,28 @@ import Evaluation from "./components/Evaluation";
 function App() {
   return (
     <div>
-           <MySider />
-            <div className="mainContent">
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/planner" element={<Planner />} />
-                <Route path="/evaluation" element={<Evaluation />} />
-                </Routes>
-            </div>
+      <MySider />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+      <div className="mainContent">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/planner" element={<Planner />} />
+          <Route path="/evaluation" element={<Evaluation />} />
+        </Routes>
+      </div>
 
-    
+
     </div>
   );
 }
