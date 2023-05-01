@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import {Col, Row, Divider, Button, Tooltip, DatePicker} from 'antd';
+import {Col, Row, Divider, Button, Tooltip, DatePicker, Modal} from 'antd';
 
 import Select from 'react-select';
 import {Input, InputNumber} from "antd";
@@ -9,11 +9,15 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 import locale from 'antd/es/date-picker/locale/de_DE';
 
+const { TextArea } = Input;
+
 function Planner() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [txtModalNotice, setTxtModalNotice] = useState("Monatliche Kurzprüfung");
   const dateFormat = 'DD.MM.YYYY';
   const [users, setUsers] = useState([]);
   const [cities, setCities] = useState([]);
-  
+
   const [selectedUser, setSelectedUser] = useState();
   const [selectedCity, setSelectedCity] = useState();
 
@@ -40,9 +44,12 @@ function Planner() {
   const [txtArbeitszeit, setTxtArbeitszeit] = useState();
   const [txtDate, setTxtDate] = useState(dayjs());
 
-  function handleSave() {
-    if(txtDate===null||txtArbeitszeit===undefined||txtArbeitszeit===null||selectedUser===undefined||selectedCity===undefined||selectedUser===null||selectedCity===null) {
-      toast.error('AGW, Feuerwehr, Datum und Arbeitszeit sind Pflichtfelder', {
+  function showModal() {
+    setIsModalOpen(true);
+  };
+  function handleModalOk() {
+    if(txtModalNotice===''||selectedUser===undefined||txtArbeitszeit===undefined||txtDate===null) {
+      toast.error('Bitte alle Felder füllen', {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -51,11 +58,11 @@ function Planner() {
         draggable: true,
         progress: undefined,
         theme: "colored",
-        });
+      });
     } else {
-      const params = { user: selectedUser.value, city: selectedCity.value, flaschenFuellen: txtFlaschenFuellen, flaschenFuellenNr: txtFlaschenFuellenNr, flaschenTUEV: txtFlaschenTUEV, flaschenTUEVNr: txtFlaschenTUEVNr, maskenPruefen: txtMaskenPruefen, maskenPruefenNr: txtMaskenPruefenNr, maskenReinigen: txtMaskenReinigen, maskenReinigenNr: txtMaskenReinigenNr, laPruefen: txtLAPruefen, laPruefenNr: txtLAPruefenNr, laReinigen: txtLAReinigen, laReinigenNr: txtLAReinigenNr, geraetePruefen: txtGereatePruefen, geraetePruefenNr: txtGereatePruefenNr, geraeteReinigen: txtGereateReinigen, geraeteReinigenNr: txtGereateReinigenNr, arbeitszeit: txtArbeitszeit, dateWork: txtDate };
-      axios.put("http://ffpi:8080/createEntry", params).then((e) => {
-        if(e.status===200) {
+      const params = {user: selectedUser.value,arbeitszeit: txtArbeitszeit, dateWork: txtDate, bemerkung: txtModalNotice};
+      axios.put("http://ffpi:8080/createExtraEntry", params).then((e) => {
+        if (e.status === 200) {
           toast.success('Speichern erfolgreich', {
             position: "top-right",
             autoClose: 3000,
@@ -65,7 +72,8 @@ function Planner() {
             draggable: true,
             progress: undefined,
             theme: "colored",
-            });
+          });
+          setIsModalOpen(false);
         } else {
           toast.error('Fehler beim speichern aufgetreten', {
             position: "top-right",
@@ -76,7 +84,58 @@ function Planner() {
             draggable: true,
             progress: undefined,
             theme: "colored",
-            });
+          });
+        }
+        setSelectedUser(null);
+        setTxtModalNotice("Monatliche Kurzprüfung")
+
+        setTxtArbeitszeit();
+        setTxtDate(dayjs());
+      })
+    }
+  };
+
+  function handleModalCancel() {
+    setIsModalOpen(false);
+  };
+
+  function handleSave() {
+    if (txtDate === null || txtArbeitszeit === undefined || txtArbeitszeit === null || selectedUser === undefined || selectedCity === undefined || selectedUser === null || selectedCity === null) {
+      toast.error('AGW, Feuerwehr, Datum und Arbeitszeit sind Pflichtfelder', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    } else {
+      const params = {user: selectedUser.value, city: selectedCity.value, flaschenFuellen: txtFlaschenFuellen, flaschenFuellenNr: txtFlaschenFuellenNr, flaschenTUEV: txtFlaschenTUEV, flaschenTUEVNr: txtFlaschenTUEVNr, maskenPruefen: txtMaskenPruefen, maskenPruefenNr: txtMaskenPruefenNr, maskenReinigen: txtMaskenReinigen, maskenReinigenNr: txtMaskenReinigenNr, laPruefen: txtLAPruefen, laPruefenNr: txtLAPruefenNr, laReinigen: txtLAReinigen, laReinigenNr: txtLAReinigenNr, geraetePruefen: txtGereatePruefen, geraetePruefenNr: txtGereatePruefenNr, geraeteReinigen: txtGereateReinigen, geraeteReinigenNr: txtGereateReinigenNr, arbeitszeit: txtArbeitszeit, dateWork: txtDate};
+      axios.put("http://ffpi:8080/createEntry", params).then((e) => {
+        if (e.status === 200) {
+          toast.success('Speichern erfolgreich', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
+          toast.error('Fehler beim speichern aufgetreten', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
         }
         setSelectedUser(null);
         setSelectedCity(null);
@@ -106,7 +165,7 @@ function Planner() {
       });
 
     }
-    
+
   }
 
   useEffect(() => {
@@ -144,14 +203,30 @@ function Planner() {
 
   return (
     <div>
+      <Modal title="Sonstige Aufgabe" open={isModalOpen} onOk={handleModalOk} onCancel={handleModalCancel} footer={[
+        <Button key="cancle" onClick={handleModalCancel}>
+          Abbrechen
+        </Button>,
+        <Button key="submit" type="primary" onClick={handleModalOk}>
+          Speichern
+        </Button>
+      ]}
+
+      >
+
+        <Select value={selectedUser} className="ffInputFull" placeholder={"Atemschutzgerätewart"} options={optionsUsers} onChange={(e) => setSelectedUser(e)} />
+        <TextArea rows={4} value={txtModalNotice} onChange={(e) => setTxtModalNotice(e.target.value)} className="ffInputFull" placeholder={"Bemerkung"} />
+        <InputNumber value={txtArbeitszeit} onChange={(e) => setTxtArbeitszeit(e)} min={0} max={10} decimalSeparator={","} className="ffInputFull" placeholder={"Arbeitszeit (h)"} />
+          <DatePicker locale={locale} format={dateFormat} value={txtDate} onChange={(e) => setTxtDate(e)} className="ffInputFull" />
+      </Modal>
       <Row>
         <Col span={24}>
-          <Select value={selectedUser} className="ffInputFull" placeholder={"Atemschutzgerätewart"} options={optionsUsers} onChange={(e) => setSelectedUser(e)}/>
+          <Select value={selectedUser} className="ffInputFull" placeholder={"Atemschutzgerätewart"} options={optionsUsers} onChange={(e) => setSelectedUser(e)} />
         </Col>
       </Row>
       <Row>
         <Col span={24}>
-          <Select value={selectedCity} className="ffInputFull" placeholder={"Feuerwehr"} options={optionsCities} onChange={(e) => setSelectedCity(e)}/>
+          <Select value={selectedCity} className="ffInputFull" placeholder={"Feuerwehr"} options={optionsCities} onChange={(e) => setSelectedCity(e)} />
         </Col>
       </Row>
 
@@ -209,8 +284,6 @@ function Planner() {
         </Col>
       </Row>
 
-
-
       <Divider orientation="left">Gerät</Divider>
       <Row>
         <Col span={12}>
@@ -239,9 +312,11 @@ function Planner() {
         </Col>
       </Row>
       <Row>
-        <Col span={12}></Col>
         <Col span={12}>
-          <Button onClick={()=>handleSave()} className="ffInputFull" type="primary">Speichern</Button>
+          <Button onClick={() => showModal()} className="ffInputFull otherTasksButton">Sonstige Aufgaben</Button>
+        </Col>
+        <Col span={12}>
+          <Button onClick={() => handleSave()} className="ffInputFull" type="primary">Speichern</Button>
         </Col>
       </Row>
 

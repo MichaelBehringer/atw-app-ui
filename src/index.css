@@ -104,3 +104,8 @@ code {
   position: fixed !important;
   z-index: 1000 !important;
 }
+
+.otherTasksButton {
+  background-color: #35dc1e;
+  color: white;
+}
