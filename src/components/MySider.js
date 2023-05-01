@@ -10,7 +10,6 @@ function MySider() {
       <SideNav
       className='nav-style'
         onSelect={(selected) => {
-          console.log(selected)
           navigate(selected);
         }}
       >

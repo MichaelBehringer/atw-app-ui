@@ -9,6 +9,7 @@ import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import MySider from "./components/MySider";
 import Home from "./components/Home";
 import Evaluation from "./components/Evaluation";
+import Search from "./components/Search";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/planner" element={<Planner />} />
           <Route path="/evaluation" element={<Evaluation />} />
+          <Route path="/search" element={<Search />} />
         </Routes>
       </div>
 

@@ -41,7 +41,6 @@ function Planner() {
   const [txtDate, setTxtDate] = useState(dayjs());
 
   function handleSave() {
-    console.log(txtDate, selectedUser, selectedCity)
     if(txtDate===null||txtArbeitszeit===undefined||txtArbeitszeit===null||selectedUser===undefined||selectedCity===undefined||selectedUser===null||selectedCity===null) {
       toast.error('AGW, Feuerwehr, Datum und Arbeitszeit sind Pflichtfelder', {
         position: "top-right",
