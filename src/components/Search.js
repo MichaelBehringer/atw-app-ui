@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {DeleteOutlined} from '@ant-design/icons';
 import axios from "axios";
-import {Input, Popconfirm, Table} from 'antd';
+import {Input, Modal, Popconfirm, Table} from 'antd';
 
 import Select from 'react-select';
 import 'dayjs/locale/de';
@@ -12,24 +12,37 @@ function Search() {
   const [users, setUsers] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [selectedUser, setSelectedUser] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedData, setSelectedData] = useState();
+
+  function showModal(e) {
+    setIsModalOpen(true);
+    setSelectedData(e)
+  };
+  function handleOk() {
+    setIsModalOpen(false);
+  };
+  function handleCancel() {
+    setIsModalOpen(false);
+  };
 
   function handleDeleteInput(txtInput, e) {
-    if(txtInput==='86650') {
-      const params = { data: { dataNo: e.key } };
+    if (txtInput === '86650') {
+      const params = {data: {dataNo: e.key}};
       axios.delete("http://ffpi:8080/deleteEntry", params).then((res) => {
-        handleSearch(selectedUser)
-    })
+        handleSearch(selectedUser);
+      });
     }
   }
 
   function handleSearch(e) {
-    const params = { persNo: e.value };
+    const params = {persNo: e.value};
     axios.post("http://ffpi:8080/search", params).then((res) => {
-      setSelectedUser(e)
-      setDataSource(res.data)
-  })
+      setSelectedUser(e);
+      setDataSource(res.data);
+    });
   }
- 
+
   useEffect(() => {
     axios.get("http://ffpi:8080/pers").then(
       res => {
@@ -46,8 +59,8 @@ function Search() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
-  
+
+
   const columns = [
     {
       title: 'Feuerwehr',
@@ -108,16 +121,16 @@ function Search() {
       title: '',
       dataIndex: '',
       key: 'x',
-      render: (e) =>   <Popconfirm
-      title="Eintrag löschen"
-      description={<Input onChange={(txt)=>{handleDeleteInput(txt.target.value, e)}} placeholder="Passwort" className="ffInputFull"/>}
-      okText=""
-      cancelText="Abbrechen"
-      okButtonProps={{style:{visibility: 'hidden'}}}
-    ><DeleteOutlined /></Popconfirm>
+      render: (e) => <Popconfirm
+        title="Eintrag löschen"
+        description={<Input onChange={(txt) => {handleDeleteInput(txt.target.value, e);}} placeholder="Passwort" className="ffInputFull" />}
+        okText=""
+        cancelText="Abbrechen"
+        okButtonProps={{style: {visibility: 'hidden'}}}
+      ><DeleteOutlined /></Popconfirm>
     },
   ];
-  
+
 
   const optionsUsers = users.map(user => ({
     value: user.persNo, label: user.firstname + " " + user.lastname
@@ -125,12 +138,15 @@ function Search() {
 
   return (
     <div>
-          <Select className="ffInputFull" placeholder={"Atemschutzgerätewart"} options={optionsUsers} onChange={(e) => handleSearch(e)}/>
-<Table scroll={{ x: 400 }} dataSource={dataSource} columns={columns} />
-      
-
+      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
+      <Select className="ffInputFull" placeholder={"Atemschutzgerätewart"} options={optionsUsers} onChange={(e) => handleSearch(e)} />
+      <Table scroll={{x: 400}} dataSource={dataSource} columns={columns} />
     </div>
-  )
+  );
 }
 
 export default Search;
