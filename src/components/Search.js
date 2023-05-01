@@ -5,9 +5,7 @@ import {Button, Input, InputNumber, Modal, Table} from 'antd';
 
 import Select from 'react-select';
 import 'dayjs/locale/de';
-import {toast} from "react-toastify";
-
-
+import {myToastError, myToastSuccess} from "./MyToast";
 
 function Search() {
   const [users, setUsers] = useState([]);
@@ -24,19 +22,15 @@ function Search() {
   };
   function handleOk() {
     if(txtPasswort!=='86650') {
-      toast.error('Passwort falsch!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        });
+      myToastError('Passwort falsch!')
     } else {
       const params = { city: selectedData?.city, flaschenFuellen: selectedData?.flaschenFuellen, flaschenTUEV: selectedData?.flaschenTUEV, maskenPruefen: selectedData?.maskenPruefen, maskenReinigen: selectedData?.maskenReinigen, laPruefen: selectedData?.laPruefen, laReinigen: selectedData?.laReinigen, geraetePruefen: selectedData?.gereatPruefen, geraeteReinigen: selectedData?.gereatReinigen, arbeitszeit: selectedData?.timeWork, bemerkung: selectedData?.bemerkung, dataNo: selectedData.key };
       axios.post("http://ffpi:8080/updateEntry", params).then((res) => {
+        if (res.status === 200) {
+          myToastSuccess('Update erfolgreich')
+        } else {
+          myToastError('Fehler beim Update aufgetreten')
+        }
         handleSearch(selectedUser);
       });
       setIsModalOpen(false);
@@ -44,19 +38,15 @@ function Search() {
   };
   function handleDelete() {
     if(txtPasswort!=='86650') {
-      toast.error('Passwort falsch!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        });
+      myToastError('Passwort falsch!')
     } else {
       const params = {data: {dataNo: selectedData.key}};
       axios.delete("http://ffpi:8080/deleteEntry", params).then((res) => {
+        if (res.status === 200) {
+          myToastSuccess('Löschen erfolgreich')
+        } else {
+          myToastError('Fehler beim Löschen aufgetreten')
+        }
         handleSearch(selectedUser);
       });
       setIsModalOpen(false);
@@ -86,7 +76,6 @@ function Search() {
         );
       }
     );
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

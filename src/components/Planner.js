@@ -4,10 +4,10 @@ import {Col, Row, Divider, Button, Tooltip, DatePicker, Modal} from 'antd';
 
 import Select from 'react-select';
 import {Input, InputNumber} from "antd";
-import {toast} from "react-toastify";
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 import locale from 'antd/es/date-picker/locale/de_DE';
+import {myToastError, myToastSuccess} from "./MyToast";
 
 const { TextArea } = Input;
 
@@ -49,42 +49,15 @@ function Planner() {
   };
   function handleModalOk() {
     if(txtModalNotice===''||selectedUser===undefined||txtArbeitszeit===undefined||txtDate===null) {
-      toast.error('Bitte alle Felder füllen', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      myToastError('Bitte alle Felder füllen')
     } else {
       const params = {user: selectedUser.value,arbeitszeit: txtArbeitszeit, dateWork: txtDate, bemerkung: txtModalNotice};
       axios.put("http://ffpi:8080/createExtraEntry", params).then((e) => {
         if (e.status === 200) {
-          toast.success('Speichern erfolgreich', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          myToastSuccess('Speichern erfolgreich')
           setIsModalOpen(false);
         } else {
-          toast.error('Fehler beim speichern aufgetreten', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          myToastError('Fehler beim speichern aufgetreten')
         }
         setSelectedUser(null);
         setTxtModalNotice("Monatliche Kurzprüfung")
@@ -101,41 +74,14 @@ function Planner() {
 
   function handleSave() {
     if (txtDate === null || txtArbeitszeit === undefined || txtArbeitszeit === null || selectedUser === undefined || selectedCity === undefined || selectedUser === null || selectedCity === null) {
-      toast.error('AGW, Feuerwehr, Datum und Arbeitszeit sind Pflichtfelder', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
+      myToastError('AGW, Feuerwehr, Datum und Arbeitszeit sind Pflichtfelder')
     } else {
       const params = {user: selectedUser.value, city: selectedCity.value, flaschenFuellen: txtFlaschenFuellen, flaschenFuellenNr: txtFlaschenFuellenNr, flaschenTUEV: txtFlaschenTUEV, flaschenTUEVNr: txtFlaschenTUEVNr, maskenPruefen: txtMaskenPruefen, maskenPruefenNr: txtMaskenPruefenNr, maskenReinigen: txtMaskenReinigen, maskenReinigenNr: txtMaskenReinigenNr, laPruefen: txtLAPruefen, laPruefenNr: txtLAPruefenNr, laReinigen: txtLAReinigen, laReinigenNr: txtLAReinigenNr, geraetePruefen: txtGereatePruefen, geraetePruefenNr: txtGereatePruefenNr, geraeteReinigen: txtGereateReinigen, geraeteReinigenNr: txtGereateReinigenNr, arbeitszeit: txtArbeitszeit, dateWork: txtDate};
       axios.put("http://ffpi:8080/createEntry", params).then((e) => {
         if (e.status === 200) {
-          toast.success('Speichern erfolgreich', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          myToastSuccess('Speichern erfolgreich')
         } else {
-          toast.error('Fehler beim speichern aufgetreten', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
+          myToastError('Fehler beim speichern aufgetreten')
         }
         setSelectedUser(null);
         setSelectedCity(null);

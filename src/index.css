@@ -92,6 +92,10 @@ code {
   width: 100%;
 }
 
+.marginButton {
+  margin-bottom: 3px;
+}
+
 .ffInputHalf {
   width: 50%;
 }
