@@ -214,7 +214,7 @@ function Planner() {
       <Divider orientation="left">Gerät</Divider>
       <Row>
         <Col span={12}>
-          <Tooltip title="Gerät prüfen"><InputNumber value={txtGereatePruefen} onChange={(e) => setTxtGereatePruefen(e)} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Gerät prüfen"} /></Tooltip>
+          <Tooltip title="Geräte prüfen"><InputNumber value={txtGereatePruefen} onChange={(e) => setTxtGereatePruefen(e)} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Geräte prüfen"} /></Tooltip>
         </Col>
         <Col span={12}>
           <Input value={txtGereatePruefenNr} onChange={(e) => setTxtGereatePruefenNr(e.target.value)} className="ffInputFull" placeholder={"Nr."} />
@@ -222,7 +222,7 @@ function Planner() {
       </Row>
       <Row>
         <Col span={12}>
-          <Tooltip title="Gerät reinigen"><InputNumber value={txtGereateReinigen} onChange={(e) => setTxtGereateReinigen(e)} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Gerät reinigen"} /></Tooltip>
+          <Tooltip title="Geräte reinigen"><InputNumber value={txtGereateReinigen} onChange={(e) => setTxtGereateReinigen(e)} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Geräte reinigen"} /></Tooltip>
         </Col>
         <Col span={12}>
           <Input value={txtGereateReinigenNr} onChange={(e) => setTxtGereateReinigenNr(e.target.value)} className="ffInputFull" placeholder={"Nr."} />
