@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import axios from "axios";
 import {Col, Row, Divider, Button, Tooltip, DatePicker, Modal} from 'antd';
 
 import Select from 'react-select';
@@ -7,7 +6,8 @@ import {Input, InputNumber} from "antd";
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 import locale from 'antd/es/date-picker/locale/de_DE';
-import {myToastError, myToastSuccess} from "./MyToast";
+import {myToastError, myToastSuccess} from "../helper/ToastHelper";
+import {doGetRequest, doPutRequest} from "../helper/RequestHelper";
 
 const { TextArea } = Input;
 
@@ -52,7 +52,7 @@ function Planner() {
       myToastError('Bitte alle Felder füllen')
     } else {
       const params = {user: selectedUser.value,arbeitszeit: txtArbeitszeit, dateWork: txtDate, bemerkung: txtModalNotice};
-      axios.put("http://ffpi:8080/createExtraEntry", params).then((e) => {
+      doPutRequest("createExtraEntry", params).then((e) => {
         if (e.status === 200) {
           myToastSuccess('Speichern erfolgreich')
           setIsModalOpen(false);
@@ -77,7 +77,7 @@ function Planner() {
       myToastError('AGW, Feuerwehr, Datum und Arbeitszeit sind Pflichtfelder')
     } else {
       const params = {user: selectedUser.value, city: selectedCity.value, flaschenFuellen: txtFlaschenFuellen, flaschenFuellenNr: txtFlaschenFuellenNr, flaschenTUEV: txtFlaschenTUEV, flaschenTUEVNr: txtFlaschenTUEVNr, maskenPruefen: txtMaskenPruefen, maskenPruefenNr: txtMaskenPruefenNr, maskenReinigen: txtMaskenReinigen, maskenReinigenNr: txtMaskenReinigenNr, laPruefen: txtLAPruefen, laPruefenNr: txtLAPruefenNr, laReinigen: txtLAReinigen, laReinigenNr: txtLAReinigenNr, geraetePruefen: txtGereatePruefen, geraetePruefenNr: txtGereatePruefenNr, geraeteReinigen: txtGereateReinigen, geraeteReinigenNr: txtGereateReinigenNr, arbeitszeit: txtArbeitszeit, dateWork: txtDate};
-      axios.put("http://ffpi:8080/createEntry", params).then((e) => {
+      doPutRequest("createEntry", params).then((e) => {
         if (e.status === 200) {
           myToastSuccess('Speichern erfolgreich')
         } else {
@@ -115,7 +115,7 @@ function Planner() {
   }
 
   useEffect(() => {
-    axios.get("http://ffpi:8080/pers").then(
+    doGetRequest("pers").then(
       res => {
         setUsers(
           res.data.map(row => ({
@@ -126,7 +126,7 @@ function Planner() {
         );
       }
     );
-    axios.get("http://ffpi:8080/cities").then(
+    doGetRequest("cities").then(
       res => {
         setCities(
           res.data.map(row => ({

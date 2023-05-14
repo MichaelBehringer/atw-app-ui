@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
 import {Col, Row, Input, Button, Divider, Modal, Table, Popconfirm} from 'antd';
-import axios from "axios";
 import {DeleteOutlined, SaveOutlined} from "@ant-design/icons";
-import {myToastError, myToastSuccess} from "./MyToast";
+import {myToastError, myToastSuccess} from "../helper/ToastHelper";
+import {doDeleteRequest, doGetRequest, doPostRequest} from "../helper/RequestHelper";
 
 function Evaluation() {
   const [txtFlaschenFuellen, setTxtFlaschenFuellen] = useState();
@@ -20,7 +20,7 @@ function Evaluation() {
   };
 
   function handleUpdateUser(e) {
-    axios.post("http://ffpi:8080/updateUser", e).then((ret) => {
+    doPostRequest("updateUser", e).then((ret) => {
       if (ret.status === 200) {
         myToastSuccess('Speichern erfolgreich')
       } else {
@@ -30,7 +30,7 @@ function Evaluation() {
   }
 
   function handleUpdateFF(e) {
-    axios.post("http://ffpi:8080/updateCity", e).then((ret) => {
+    doPostRequest("updateCity", e).then((ret) => {
       if (ret.status === 200) {
         myToastSuccess('Speichern erfolgreich')
       } else {
@@ -41,7 +41,7 @@ function Evaluation() {
 
   function handleDeleteUser(e) {
     const params = {data: {userNo: e.key}};
-      axios.delete("http://ffpi:8080/deleteUser", params).then((res) => {
+      doDeleteRequest("deleteUser", params).then((res) => {
         if (res.status === 200) {
           myToastSuccess('Löschen erfolgreich')
         } else {
@@ -53,7 +53,7 @@ function Evaluation() {
 
   function handleDeleteFF(e) {
     const params = {data: {cityNo: e.key}};
-      axios.delete("http://ffpi:8080/deleteCity", params).then((res) => {
+      doDeleteRequest("deleteCity", params).then((res) => {
         if (res.status === 200) {
           myToastSuccess('Löschen erfolgreich')
         } else {
@@ -79,7 +79,7 @@ function Evaluation() {
   };
 
   function loadUser() {
-    axios.get("http://ffpi:8080/pers").then(
+    doGetRequest("pers").then(
       res => {
         setUsers(
           res.data.map(row => ({
@@ -92,7 +92,7 @@ function Evaluation() {
     );
   }
   function loadCities() {
-    axios.get("http://ffpi:8080/cities").then(
+    doGetRequest("cities").then(
       res => {
         setCities(
           res.data.map(row => ({
