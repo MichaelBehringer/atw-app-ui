@@ -7,7 +7,6 @@ import TokenContainer from './TokenContainer';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <HashRouter>
       <ToastContainer
         position="top-right"
@@ -23,5 +22,4 @@ root.render(
       />
       <TokenContainer />
     </HashRouter>
-  </React.StrictMode>
 );

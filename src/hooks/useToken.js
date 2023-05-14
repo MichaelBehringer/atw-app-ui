@@ -4,7 +4,7 @@ import {useState} from 'react';
 function useToken() {
 
   function getToken() {
-    const userToken = sessionStorage.getItem('token');
+    const userToken = localStorage.getItem('token');
     return userToken && userToken;
   }
 

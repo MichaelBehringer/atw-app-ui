@@ -6,14 +6,17 @@ import {myToastError} from "../helper/ToastHelper";
 function Authentication(props) {
 	const [txtUsername, setTxtUsername] = useState();
 	const [txtPassword, setTxtPassword] = useState();
+	const [isLoading, setIsLoading] = useState(false);
 
 	function handleLogin() {
+		setIsLoading(true)
 		const params = {username: txtUsername, password: txtPassword};
 		doPostRequest("token", params).then((response) => {
+			setIsLoading(false)
 			props.setToken(response.data.access_token);
 			//setIsAdmin(response.data.isAdmin);
 		}, error => {
-			console.log(error)
+			setIsLoading(false)
 			if (error.response.status === 401) {
 				myToastError("Benutzername oder Passwort falsch!");
 			}
@@ -28,7 +31,7 @@ function Authentication(props) {
 		<div>
 			<Input value={txtUsername} onChange={(e) => setTxtUsername(e.target.value)} className="ffInputFull" placeholder={"Benutzername"} />
 			<Input.Password  value={txtPassword} onChange={(e) => setTxtPassword(e.target.value)} className="ffInputFull" placeholder={"Passwort"} />
-			<Button onClick={() => handleLogin()} className="ffInputFull" type="primary">Speichern</Button>
+			<Button loading={isLoading} onClick={() => handleLogin()} className="ffInputFull" type="primary">Speichern</Button>
 		</div>
 	);
 }
