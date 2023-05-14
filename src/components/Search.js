@@ -159,8 +159,7 @@ function Search(props) {
   }));
 
   return (
-    <div>
-      {users.length !== 0 ?
+    users.length !== 0 ?
         <div>
           <Modal title="Eintrag bearbeiten" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[
             <Button
@@ -205,9 +204,7 @@ function Search(props) {
           </Modal>
           <Select isDisabled={!isAdmin(props.loggedFunctionNo)} value={selectedUser}  className="ffInputFull" placeholder={"Atemschutzgerätewart"} options={optionsUsers} onChange={(e) => handleUserChange(e)} />
           <Table scroll={{x: 400}} dataSource={dataSource} columns={columns} />
-        </div> : <div>Daten werden geladen</div>}
-    </div>
-  );
+        </div> : <div>Daten werden geladen</div>);
 }
 
 export default Search;

@@ -31,7 +31,7 @@ function App(props) {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/planner" element={<Planner loggedPersNo={loggedPersNo}/>} />
-          <Route path="/evaluation" element={<Evaluation token={props.token}/>} />
+          <Route path="/evaluation" element={<Evaluation loggedFunctionNo={loggedFunctionNo}/>} />
           <Route path="/search" element={<Search loggedFunctionNo={loggedFunctionNo} loggedPersNo={loggedPersNo}/>} />
         </Routes>
       </div>

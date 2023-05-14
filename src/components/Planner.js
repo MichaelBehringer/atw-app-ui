@@ -153,8 +153,7 @@ function Planner(props) {
   }));
 
   return (
-    <div>
-      {(users.length !== 0 && cities.length !== 0) ?
+    (users.length !== 0 && cities.length !== 0) ?
         <div>
           <Modal title="Sonstige Aufgabe" open={isModalOpen} onOk={handleModalOk} onCancel={handleModalCancel} footer={[
             <Button key="cancle" onClick={handleModalCancel}>
@@ -274,9 +273,7 @@ function Planner(props) {
           </Row>
 
 
-        </div> : <div>Daten werden geladen</div>}
-    </div>
-  );
+        </div> : <div>Daten werden geladen</div>);
 }
 
 export default Planner;
