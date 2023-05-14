@@ -1,16 +1,26 @@
 import {useNavigate} from "react-router-dom";
 import React from 'react';
 import SideNav, {NavItem, NavIcon, NavText} from '@trendmicro/react-sidenav';
-import {CalendarOutlined, CompressOutlined, HomeOutlined, SearchOutlined} from '@ant-design/icons';
+import {CalendarOutlined, CompressOutlined, HomeOutlined, LogoutOutlined, SearchOutlined} from '@ant-design/icons';
+import {doPostRequest} from "../helper/RequestHelper";
 
-function MySider() {
+function MySider(props) {
   const navigate = useNavigate();
+
+  function handleLogout() {
+    props.removeToken();
+    doPostRequest("logout");
+  }
   return (
     <div>
       <SideNav
       className='nav-style'
         onSelect={(selected) => {
-          navigate(selected);
+          if(selected==='logout') {
+            handleLogout()
+          } else {
+            navigate(selected)
+          }
         }}
       >
         <SideNav.Toggle />
@@ -45,6 +55,14 @@ function MySider() {
             </NavIcon>
             <NavText>
               Auswertung
+            </NavText>
+          </NavItem>
+          <NavItem eventKey="logout">
+            <NavIcon>
+              <LogoutOutlined style={{fontSize: '1.75em'}} />
+            </NavIcon>
+            <NavText>
+              Ausloggen
             </NavText>
           </NavItem>
         </SideNav.Nav>
