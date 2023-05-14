@@ -59,7 +59,6 @@ function Planner(props) {
         } else {
           myToastError('Fehler beim speichern aufgetreten');
         }
-        setSelectedUser(null);
         setTxtModalNotice("Monatliche Kurzprüfung");
 
         setTxtArbeitszeit();
@@ -83,7 +82,6 @@ function Planner(props) {
         } else {
           myToastError('Fehler beim speichern aufgetreten');
         }
-        setSelectedUser(null);
         setSelectedCity(null);
 
         setTxtFlaschenFuellen();
@@ -136,15 +134,15 @@ function Planner(props) {
         );
       }
     );
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (users.length != 0) {
+    if (users.length !== 0) {
       let loggedUser = getUserToID(props.loggedPersNo, users);
       setSelectedUser({value: loggedUser?.persNo, label: loggedUser?.firstname + " " + loggedUser?.lastname});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
 
   const optionsUsers = users.map(user => ({
@@ -156,7 +154,7 @@ function Planner(props) {
 
   return (
     <div>
-      {(users.length != 0 && cities.length != 0) ?
+      {(users.length !== 0 && cities.length !== 0) ?
         <div>
           <Modal title="Sonstige Aufgabe" open={isModalOpen} onOk={handleModalOk} onCancel={handleModalCancel} footer={[
             <Button key="cancle" onClick={handleModalCancel}>
@@ -276,7 +274,7 @@ function Planner(props) {
           </Row>
 
 
-        </div> : <div>Loading</div>}
+        </div> : <div>Daten werden geladen</div>}
     </div>
   );
 }

@@ -13,29 +13,29 @@ import {doGetRequestAut} from "../helper/RequestHelper";
 
 function App(props) {
 	const [loggedPersNo, setLoggedPersNo] = useState();
-	const [loggedfunctionNo, setLoggedfunctionNo] = useState();
+	const [loggedFunctionNo, setLoggedFunctionNo] = useState();
   useEffect(() => {
     doGetRequestAut('loggedUser', props.token).then((res)=>{
       setLoggedPersNo(res.data.persNo)
-      setLoggedfunctionNo(res.data.functionNo)
+      setLoggedFunctionNo(res.data.functionNo)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div>
-    {(loggedPersNo && loggedfunctionNo) ?
+    {(loggedPersNo && loggedFunctionNo) ?
     <div>
-      <MySider removeToken={props.removeToken}/>
+      <MySider loggedFunctionNo={loggedFunctionNo} removeToken={props.removeToken}/>
       <div className="mainContent">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/planner" element={<Planner loggedPersNo={loggedPersNo}/>} />
           <Route path="/evaluation" element={<Evaluation token={props.token}/>} />
-          <Route path="/search" element={<Search />} />
+          <Route path="/search" element={<Search loggedFunctionNo={loggedFunctionNo} loggedPersNo={loggedPersNo}/>} />
         </Routes>
       </div>
-    </div> : <div>Loading</div>}
+    </div> : <div>Daten werden geladen</div>}
     </div>
   );
 }

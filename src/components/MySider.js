@@ -3,6 +3,7 @@ import React from 'react';
 import SideNav, {NavItem, NavIcon, NavText} from '@trendmicro/react-sidenav';
 import {CalendarOutlined, CompressOutlined, HomeOutlined, LogoutOutlined, SearchOutlined} from '@ant-design/icons';
 import {doPostRequest} from "../helper/RequestHelper";
+import {isAdmin, isATW} from "../helper/helpFunctions";
 
 function MySider(props) {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ function MySider(props) {
     props.removeToken();
     doPostRequest("logout");
   }
+
+  console.log('xx', props.loggedFunctionNo)
   return (
     <div>
       <SideNav
@@ -33,30 +36,30 @@ function MySider(props) {
               Home
             </NavText>
           </NavItem>
-          <NavItem eventKey="planner">
+          {isATW(props.loggedFunctionNo)||isAdmin(props.loggedFunctionNo)?<NavItem eventKey="planner">
             <NavIcon>
               <CalendarOutlined style={{fontSize: '1.75em'}} />
             </NavIcon>
             <NavText>
               Zeiterfassung
             </NavText>
-          </NavItem>
-          <NavItem eventKey="search">
+          </NavItem>:<></>}
+          {isATW(props.loggedFunctionNo)||isAdmin(props.loggedFunctionNo)?<NavItem eventKey="search">
             <NavIcon>
               <SearchOutlined style={{fontSize: '1.75em'}} />
             </NavIcon>
             <NavText>
               Suche
             </NavText>
-          </NavItem>
-          <NavItem eventKey="evaluation">
+          </NavItem>:<></>}
+          {isAdmin(props.loggedFunctionNo)?<NavItem eventKey="evaluation">
             <NavIcon>
               <CompressOutlined style={{fontSize: '1.75em'}} />
             </NavIcon>
             <NavText>
               Auswertung
             </NavText>
-          </NavItem>
+          </NavItem>:<></>}
           <NavItem eventKey="logout">
             <NavIcon>
               <LogoutOutlined style={{fontSize: '1.75em'}} />

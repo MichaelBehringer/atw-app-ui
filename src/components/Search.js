@@ -6,60 +6,55 @@ import Select from 'react-select';
 import 'dayjs/locale/de';
 import {myToastError, myToastSuccess} from "../helper/ToastHelper";
 import {doDeleteRequest, doGetRequest, doPostRequest} from "../helper/RequestHelper";
+import {getUserToID, isAdmin} from "../helper/helpFunctions";
 
-function Search() {
+function Search(props) {
   const [users, setUsers] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [selectedUser, setSelectedUser] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedData, setSelectedData] = useState();
-  const [txtPasswort, setTxtPasswort] = useState();
 
   function showModal(e) {
     setIsModalOpen(true);
-    setSelectedData(e)
-    setTxtPasswort()
+    setSelectedData(e);
   };
   function handleOk() {
-    if(txtPasswort!=='86650') {
-      myToastError('Passwort falsch!')
-    } else {
-      const params = { city: selectedData?.city, flaschenFuellen: selectedData?.flaschenFuellen, flaschenTUEV: selectedData?.flaschenTUEV, maskenPruefen: selectedData?.maskenPruefen, maskenReinigen: selectedData?.maskenReinigen, laPruefen: selectedData?.laPruefen, laReinigen: selectedData?.laReinigen, geraetePruefen: selectedData?.gereatPruefen, geraeteReinigen: selectedData?.gereatReinigen, arbeitszeit: selectedData?.timeWork, bemerkung: selectedData?.bemerkung, dataNo: selectedData.key };
+      const params = {city: selectedData?.city, flaschenFuellen: selectedData?.flaschenFuellen, flaschenTUEV: selectedData?.flaschenTUEV, maskenPruefen: selectedData?.maskenPruefen, maskenReinigen: selectedData?.maskenReinigen, laPruefen: selectedData?.laPruefen, laReinigen: selectedData?.laReinigen, geraetePruefen: selectedData?.gereatPruefen, geraeteReinigen: selectedData?.gereatReinigen, arbeitszeit: selectedData?.timeWork, bemerkung: selectedData?.bemerkung, dataNo: selectedData.key};
       doPostRequest("updateEntry", params).then((res) => {
         if (res.status === 200) {
-          myToastSuccess('Update erfolgreich')
+          myToastSuccess('Update erfolgreich');
         } else {
-          myToastError('Fehler beim Update aufgetreten')
+          myToastError('Fehler beim Update aufgetreten');
         }
-        handleSearch(selectedUser);
+        doSearch(selectedUser.value);
       });
       setIsModalOpen(false);
-    }
   };
   function handleDelete() {
-    if(txtPasswort!=='86650') {
-      myToastError('Passwort falsch!')
-    } else {
       const params = {data: {dataNo: selectedData.key}};
       doDeleteRequest("deleteEntry", params).then((res) => {
         if (res.status === 200) {
-          myToastSuccess('Löschen erfolgreich')
+          myToastSuccess('Löschen erfolgreich');
         } else {
-          myToastError('Fehler beim Löschen aufgetreten')
+          myToastError('Fehler beim Löschen aufgetreten');
         }
-        handleSearch(selectedUser);
+        doSearch(selectedUser.value);
       });
       setIsModalOpen(false);
-    }
   };
   function handleCancel() {
     setIsModalOpen(false);
   };
 
-  function handleSearch(e) {
-    const params = {persNo: e.value};
+  function handleUserChange(e) {
+    setSelectedUser(e);
+    doSearch(e.value)
+  }
+
+  function doSearch(persNumber) {
+    const params = {persNo: persNumber};
     doPostRequest("search", params).then((res) => {
-      setSelectedUser(e);
       setDataSource(res.data);
     });
   }
@@ -79,7 +74,15 @@ function Search() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
+  useEffect(() => {
+    console.log(users, 'a')
+    if (users.length !== 0) {
+      let loggedUser = getUserToID(props.loggedPersNo, users);
+      setSelectedUser({value: loggedUser?.persNo, label: loggedUser?.firstname + " " + loggedUser?.lastname});
+      doSearch(loggedUser?.persNo)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [users]);
 
   const columns = [
     {
@@ -146,7 +149,7 @@ function Search() {
       title: '',
       dataIndex: '',
       key: 'x',
-      render: (e) => <EditOutlined onClick={()=>showModal(e)}/>
+      render: (e) => isAdmin(props.loggedFunctionNo) ? <EditOutlined onClick={() => showModal(e)} /> : <EditOutlined style={{cursor: "not-allowed"}}/>
     },
   ];
 
@@ -157,50 +160,52 @@ function Search() {
 
   return (
     <div>
-      <Modal title="Eintrag bearbeiten" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[
-        <Button
-        key="Delete"
-        type="primary"
-        onClick={handleDelete}
-        danger
-      >
-        Löschen
-      </Button>,
-          <Button key="cancle" onClick={handleCancel}>
-            Abbrechen
-          </Button>,
-          <Button key="submit" type="primary" onClick={handleOk}>
-            Speichern
-          </Button>
-        ]}
-      
-      >
-      <Input disabled value={selectedData?.city} className="ffInputFull"/>
-      <Input disabled value={selectedUser?.label} className="ffInputFull"/>
-      <InputNumber addonBefore="Flaschen füllen" value={selectedData?.flaschenFuellen} onChange={(e) => setSelectedData({...selectedData, flaschenFuellen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Flaschen füllen"} />
+      {users.length !== 0 ?
+        <div>
+          <Modal title="Eintrag bearbeiten" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={[
+            <Button
+              key="Delete"
+              type="primary"
+              onClick={handleDelete}
+              danger
+            >
+              Löschen
+            </Button>,
+            <Button key="cancle" onClick={handleCancel}>
+              Abbrechen
+            </Button>,
+            <Button key="submit" type="primary" onClick={handleOk}>
+              Speichern
+            </Button>
+          ]}
 
-      <InputNumber addonBefore="Flaschen TÜV" value={selectedData?.flaschenTUEV} onChange={(e) => setSelectedData({...selectedData, flaschenTUEV: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Flaschen TÜV"} />
-      
-      <InputNumber addonBefore="Masken prüfen" value={selectedData?.maskenPruefen} onChange={(e) => setSelectedData({...selectedData, maskenPruefen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Masken prüfen"} />
-      
-      <InputNumber addonBefore="Masken reinigen" value={selectedData?.maskenReinigen} onChange={(e) => setSelectedData({...selectedData, maskenReinigen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Masken reinigen"} />
-      
-      <InputNumber addonBefore="LA prüfen" value={selectedData?.laPruefen} onChange={(e) => setSelectedData({...selectedData, laPruefen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"LA prüfen"} />
-      
-      <InputNumber addonBefore="LA reinigen" value={selectedData?.laReinigen} onChange={(e) => setSelectedData({...selectedData, laReinigen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"LA reinigen"} />
-      
-      <InputNumber addonBefore="Geräte prüfen" value={selectedData?.gereatPruefen} onChange={(e) => setSelectedData({...selectedData, gereatPruefen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Geräte prüfen"} />
-      
-      <InputNumber addonBefore="Geräte reinigen" value={selectedData?.gereatReinigen} onChange={(e) => setSelectedData({...selectedData, gereatReinigen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Geräte reinigen"} />
-      <Input addonBefore="Bemerkung" value={selectedData?.bemerkung} onChange={(e) => setSelectedData({...selectedData, bemerkung: e.target.value})} className="ffInputFull"/>
-      
-      <InputNumber addonBefore="Arbeitszeit (h)" value={selectedData?.timeWork} onChange={(e) => setSelectedData({...selectedData, timeWork: e})} decimalSeparator={","} min={0} max={10} className="ffInputFull" placeholder={"Arbeitszeit (h)"} />
-      <Input disabled value={selectedData?.dateWork} className="ffInputFull"/>
-      <Input placeholder="Passwort" value={txtPasswort} onChange={(e) => setTxtPasswort(e.target.value)} className="ffInputFull"/>
-      
-      </Modal>
-      <Select className="ffInputFull" placeholder={"Atemschutzgerätewart"} options={optionsUsers} onChange={(e) => handleSearch(e)} />
-      <Table scroll={{x: 400}} dataSource={dataSource} columns={columns} />
+          >
+            <Input disabled value={selectedData?.city} className="ffInputFull" />
+            <Input disabled value={selectedUser?.label} className="ffInputFull" />
+            <InputNumber addonBefore="Flaschen füllen" value={selectedData?.flaschenFuellen} onChange={(e) => setSelectedData({...selectedData, flaschenFuellen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Flaschen füllen"} />
+
+            <InputNumber addonBefore="Flaschen TÜV" value={selectedData?.flaschenTUEV} onChange={(e) => setSelectedData({...selectedData, flaschenTUEV: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Flaschen TÜV"} />
+
+            <InputNumber addonBefore="Masken prüfen" value={selectedData?.maskenPruefen} onChange={(e) => setSelectedData({...selectedData, maskenPruefen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Masken prüfen"} />
+
+            <InputNumber addonBefore="Masken reinigen" value={selectedData?.maskenReinigen} onChange={(e) => setSelectedData({...selectedData, maskenReinigen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Masken reinigen"} />
+
+            <InputNumber addonBefore="LA prüfen" value={selectedData?.laPruefen} onChange={(e) => setSelectedData({...selectedData, laPruefen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"LA prüfen"} />
+
+            <InputNumber addonBefore="LA reinigen" value={selectedData?.laReinigen} onChange={(e) => setSelectedData({...selectedData, laReinigen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"LA reinigen"} />
+
+            <InputNumber addonBefore="Geräte prüfen" value={selectedData?.gereatPruefen} onChange={(e) => setSelectedData({...selectedData, gereatPruefen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Geräte prüfen"} />
+
+            <InputNumber addonBefore="Geräte reinigen" value={selectedData?.gereatReinigen} onChange={(e) => setSelectedData({...selectedData, gereatReinigen: e})} precision={0} min={0} max={10} className="ffInputFull" placeholder={"Geräte reinigen"} />
+            <Input addonBefore="Bemerkung" value={selectedData?.bemerkung} onChange={(e) => setSelectedData({...selectedData, bemerkung: e.target.value})} className="ffInputFull" />
+
+            <InputNumber addonBefore="Arbeitszeit (h)" value={selectedData?.timeWork} onChange={(e) => setSelectedData({...selectedData, timeWork: e})} decimalSeparator={","} min={0} max={10} className="ffInputFull" placeholder={"Arbeitszeit (h)"} />
+            <Input disabled value={selectedData?.dateWork} className="ffInputFull" />
+
+          </Modal>
+          <Select isDisabled={!isAdmin(props.loggedFunctionNo)} value={selectedUser}  className="ffInputFull" placeholder={"Atemschutzgerätewart"} options={optionsUsers} onChange={(e) => handleUserChange(e)} />
+          <Table scroll={{x: 400}} dataSource={dataSource} columns={columns} />
+        </div> : <div>Daten werden geladen</div>}
     </div>
   );
 }
