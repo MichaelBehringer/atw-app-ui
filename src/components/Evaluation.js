@@ -3,12 +3,14 @@ import {Col, Row, Input, Button, Divider, Modal, Table, Popconfirm} from 'antd';
 import {DeleteOutlined, SaveOutlined} from "@ant-design/icons";
 import {myToastError, myToastSuccess} from "../helper/ToastHelper";
 import {doDeleteRequest, doGetRequest, doPostRequest} from "../helper/RequestHelper";
+import {useNavigate} from "react-router-dom";
 
 function Evaluation() {
   const [isModalAGWOpen, setIsModalAGWOpen] = useState(false);
   const [isModalFFOpen, setIsModalFFOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [cities, setCities] = useState([]);
+  const navigate = useNavigate();
 
   function showAGWModal() {
     setIsModalAGWOpen(true);
@@ -199,7 +201,7 @@ function Evaluation() {
       <Divider orientation="left">Verwalten</Divider>
       <Row>
         <Col span={24}>
-          <Button onClick={() => showAGWModal()} className="ffInputFull marginButton" type="primary">AGW Verwalten</Button>
+          <Button onClick={() => navigate('/userManagement')} className="ffInputFull marginButton" type="primary">AGW Verwalten</Button>
         </Col>
       </Row>
       <Row>

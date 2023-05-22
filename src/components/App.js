@@ -10,6 +10,7 @@ import Home from "./Home";
 import Evaluation from "./Evaluation";
 import Search from "./Search";
 import {doGetRequestAut} from "../helper/RequestHelper";
+import UserManagement from "./UserManagement";
 
 function App(props) {
 	const [loggedPersNo, setLoggedPersNo] = useState();
@@ -32,6 +33,7 @@ function App(props) {
           <Route path="/" element={<Home />} />
           <Route path="/planner" element={<Planner loggedPersNo={loggedPersNo}/>} />
           <Route path="/evaluation" element={<Evaluation loggedFunctionNo={loggedFunctionNo}/>} />
+          <Route path="/userManagement" element={<UserManagement loggedFunctionNo={loggedFunctionNo}/>} />
           <Route path="/search" element={<Search loggedFunctionNo={loggedFunctionNo} loggedPersNo={loggedPersNo}/>} />
         </Routes>
       </div>
