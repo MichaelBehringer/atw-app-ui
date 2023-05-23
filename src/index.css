@@ -113,3 +113,7 @@ code {
   background-color: #35dc1e;
   color: white;
 }
+
+.tableElem {
+  min-width: 100px;
+}

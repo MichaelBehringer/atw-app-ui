@@ -12,8 +12,6 @@ function MySider(props) {
     props.removeToken();
     doPostRequest("logout");
   }
-
-  console.log('xx', props.loggedFunctionNo)
   return (
     <div>
       <SideNav

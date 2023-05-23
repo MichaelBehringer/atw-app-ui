@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://ffpi:8080/"
+const url = "http://ffwemding.ddns.net:8080/"
 
 export async function doPostRequest(path, param) {
 	return axios.post(url+path, param)

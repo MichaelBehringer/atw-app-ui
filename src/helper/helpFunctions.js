@@ -13,3 +13,7 @@ export function isATW(functionID) {
 export function isExternal(functionID) {
 	return functionID === 3
 }
+
+export function getWemding() {
+	return {value: 1, label: 'Wemding'}
+}

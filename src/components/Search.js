@@ -75,7 +75,6 @@ function Search(props) {
   }, []);
 
   useEffect(() => {
-    console.log(users, 'a')
     if (users.length !== 0) {
       let loggedUser = getUserToID(props.loggedPersNo, users);
       setSelectedUser({value: loggedUser?.persNo, label: loggedUser?.firstname + " " + loggedUser?.lastname});

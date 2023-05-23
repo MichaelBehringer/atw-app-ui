@@ -5,11 +5,21 @@ import {myToastError, myToastSuccess} from "../helper/ToastHelper";
 import {DeleteOutlined, SaveOutlined} from "@ant-design/icons";
 import Select from 'react-select';
 import {isExternal} from "../helper/helpFunctions";
+import AddUserModal from "./AddUserModal";
 
 function UserManagement() {
   const [users, setUsers] = useState([]);
   const [cities, setCities] = useState([]);
   const [functions, setFunctions] = useState([]);
+  const [isModalAGWOpen, setIsModalAGWOpen] = useState(false);
+
+  function showAGWModal() {
+    setIsModalAGWOpen(true);
+  };
+
+  function handleModalAGWCancel() {
+    setIsModalAGWOpen(false);
+  };
 
   function loadUser() {
     doGetRequest("persExtra").then(
@@ -90,7 +100,7 @@ function UserManagement() {
       title: 'Rolle',
       dataIndex: '',
       key: 'role',
-      render: (e) => <Select menuPlacement={'auto'} value={{value: e.functionNo, label: e.functionName}} options={optionsFunctions} onChange={(tx) => {
+      render: (e) => <Select className="tableElem" menuPlacement={'auto'} value={{value: e.functionNo, label: e.functionName}} options={optionsFunctions} onChange={(tx) => {
         setUsers(
           users.map((item) => {
             return item.key === e.key ? {...e, functionNo: tx.value, functionName: tx.label} : item;
@@ -102,7 +112,7 @@ function UserManagement() {
       title: 'Feuerwehr',
       dataIndex: '',
       key: 'ff',
-      render: (e) => <Select menuPlacement={'auto'} isDisabled={!isExternal(e.functionNo)} value={{value: e.cityNo, label: e.cityName}} options={optionsCities} onChange={(tx) => {
+      render: (e) => <Select className="tableElem" menuPlacement={'auto'} isDisabled={!isExternal(e.functionNo)} value={{value: e.cityNo, label: e.cityName}} options={optionsCities} onChange={(tx) => {
         setUsers(
           users.map((item) => {
             return item.key === e.key ? {...e, cityNo: tx.value, cityName: tx.label} : item;
@@ -114,7 +124,7 @@ function UserManagement() {
       title: 'Vorname',
       dataIndex: '',
       key: 'firstname',
-      render: (e) => <Input value={e.firstname} onChange={(tx) => {
+      render: (e) => <Input className="tableElem" value={e.firstname} onChange={(tx) => {
         setUsers(
           users.map((item) => {
             return item.key === e.key ? {...e, firstname: tx.target.value} : item;
@@ -126,10 +136,22 @@ function UserManagement() {
       title: 'Nachname',
       dataIndex: '',
       key: 'lastname',
-      render: (e) => <Input value={e.lastname} onChange={(tx) => {
+      render: (e) => <Input className="tableElem" value={e.lastname} onChange={(tx) => {
         setUsers(
           users.map((item) => {
             return item.key === e.key ? {...e, lastname: tx.target.value} : item;
+          })
+        );
+      }} />
+    },
+    {
+      title: 'Benutzername',
+      dataIndex: '',
+      key: 'username',
+      render: (e) => <Input className="tableElem" value={e.username} onChange={(tx) => {
+        setUsers(
+          users.map((item) => {
+            return item.key === e.key ? {...e, username: tx.target.value} : item;
           })
         );
       }} />
@@ -163,17 +185,13 @@ function UserManagement() {
 
   return (
     <div>
-      <Row>
-        <Col span={24}>
-          <p>Benutzerverwaltung</p>
-        </Col>
-      </Row>
+      <AddUserModal isModalAGWOpen={isModalAGWOpen} handleModalAGWCancel={handleModalAGWCancel} optionsFunctions={optionsFunctions} optionsCities={optionsCities} loadUser={loadUser}/>
       <Row>
         <Col span={12}>
-          <Button onClick={() => console.log()} className="ffInputFull marginButton">Zurück</Button>
+        <p>Benutzerverwaltung</p>
         </Col>
         <Col span={12}>
-          <Button onClick={() => console.log()} className="ffInputFull marginButton" type="primary">Neuer AGW</Button>
+          <Button onClick={() => showAGWModal()} className="ffInputFull marginButton" type="primary">Neuer User</Button>
         </Col>
       </Row>
       <Table className="userManagementTable" pagination={false} scroll={{x: 400}} dataSource={users} columns={columnsAGW} />

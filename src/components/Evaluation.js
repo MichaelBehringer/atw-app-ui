@@ -6,28 +6,13 @@ import {doDeleteRequest, doGetRequest, doPostRequest} from "../helper/RequestHel
 import {useNavigate} from "react-router-dom";
 
 function Evaluation() {
-  const [isModalAGWOpen, setIsModalAGWOpen] = useState(false);
   const [isModalFFOpen, setIsModalFFOpen] = useState(false);
-  const [users, setUsers] = useState([]);
   const [cities, setCities] = useState([]);
   const navigate = useNavigate();
 
-  function showAGWModal() {
-    setIsModalAGWOpen(true);
-  };
   function showFFModal() {
     setIsModalFFOpen(true);
   };
-
-  function handleUpdateUser(e) {
-    doPostRequest("updateUser", e).then((ret) => {
-      if (ret.status === 200) {
-        myToastSuccess('Speichern erfolgreich');
-      } else {
-        myToastError('Fehler beim speichern aufgetreten');
-      }
-    });
-  }
 
   function handleUpdateFF(e) {
     doPostRequest("updateCity", e).then((ret) => {
@@ -36,18 +21,6 @@ function Evaluation() {
       } else {
         myToastError('Fehler beim speichern aufgetreten');
       }
-    });
-  }
-
-  function handleDeleteUser(e) {
-    const params = {data: {userNo: e.key}};
-    doDeleteRequest("deleteUser", params).then((res) => {
-      if (res.status === 200) {
-        myToastSuccess('Löschen erfolgreich');
-      } else {
-        myToastError('Fehler beim Löschen aufgetreten');
-      }
-      loadUser();
     });
   }
 
@@ -63,26 +36,11 @@ function Evaluation() {
     });
   }
 
-  function handleModalAGWCancel() {
-    setIsModalAGWOpen(false);
-  };
   function handleModalFFCancel() {
     setIsModalFFOpen(false);
   };
 
-  function loadUser() {
-    doGetRequest("pers").then(
-      res => {
-        setUsers(
-          res.data.map(row => ({
-            key: row.persNo,
-            firstname: row.firstname,
-            lastname: row.lastname
-          }))
-        );
-      }
-    );
-  }
+
   function loadCities() {
     doGetRequest("cities").then(
       res => {
@@ -95,51 +53,6 @@ function Evaluation() {
       }
     );
   }
-
-  const columnsAGW = [
-    {
-      title: 'Vorname',
-      dataIndex: '',
-      key: 'firstname',
-      render: (e) => <Input value={e.firstname} onChange={(tx) => {
-        setUsers(
-          users.map((item) => {
-            return item.key === e.key ? {key: e.key, firstname: tx.target.value, lastname: e.lastname} : item;
-          })
-        );
-      }} />
-    },
-    {
-      title: 'Nachname',
-      dataIndex: '',
-      key: 'lastname',
-      render: (e) => <Input value={e.lastname} onChange={(tx) => {
-        setUsers(
-          users.map((item) => {
-            return item.key === e.key ? {key: e.key, firstname: e.firstname, lastname: tx.target.value} : item;
-          })
-        );
-      }} />
-    },
-    {
-      title: '',
-      dataIndex: '',
-      key: 'x',
-      render: (e) => <SaveOutlined onClick={() => handleUpdateUser(e)} />
-    },
-    {
-      title: '',
-      dataIndex: '',
-      key: 'd',
-      render: (e) => <Popconfirm
-        title="Benutzer Löschen"
-        description="sicher?"
-        onConfirm={() => handleDeleteUser(e)}
-        okText="Löschen"
-        cancelText="Abbrechen"
-      ><DeleteOutlined /></Popconfirm>
-    },
-  ];
 
   const columnsFF = [
     {
@@ -175,21 +88,12 @@ function Evaluation() {
   ];
 
   useEffect(() => {
-    loadUser();
     loadCities();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div>
-      <Modal title="AGW Verwalten" open={isModalAGWOpen} onCancel={handleModalAGWCancel} footer={[
-        <Button key="cancle" onClick={handleModalAGWCancel}>
-          Zurück
-        </Button>
-      ]}
-      >
-        <Table scroll={{x: 400}} dataSource={users} columns={columnsAGW} />
-      </Modal>
       <Modal title="Feuerwehren Verwalten" open={isModalFFOpen} onCancel={handleModalFFCancel} footer={[
         <Button key="cancle" onClick={handleModalFFCancel}>
           Zurück
