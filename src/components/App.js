@@ -34,7 +34,7 @@ function App(props) {
           <Route path="/planner" element={<Planner token={props.token} loggedPersNo={loggedPersNo}/>} />
           <Route path="/evaluation" element={<Evaluation loggedFunctionNo={loggedFunctionNo}/>} />
           <Route path="/userManagement" element={<UserManagement loggedFunctionNo={loggedFunctionNo}/>} />
-          <Route path="/search" element={<Search loggedFunctionNo={loggedFunctionNo} loggedPersNo={loggedPersNo}/>} />
+          <Route path="/search" element={<Search token={props.token} loggedFunctionNo={loggedFunctionNo} loggedPersNo={loggedPersNo}/>} />
         </Routes>
       </div>
     </div> : <div>Daten werden geladen</div>}

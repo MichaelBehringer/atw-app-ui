@@ -5,7 +5,7 @@ import {Button, Input, InputNumber, Modal, Table} from 'antd';
 import Select from 'react-select';
 import 'dayjs/locale/de';
 import {myToastError, myToastSuccess} from "../helper/ToastHelper";
-import {doDeleteRequest, doGetRequest, doPostRequest} from "../helper/RequestHelper";
+import {doDeleteRequest, doGetRequestAut, doPostRequest, doPostRequestAuth} from "../helper/RequestHelper";
 import {getUserToID, isAdmin} from "../helper/helpFunctions";
 
 function Search(props) {
@@ -54,13 +54,13 @@ function Search(props) {
 
   function doSearch(persNumber) {
     const params = {persNo: persNumber};
-    doPostRequest("search", params).then((res) => {
+    doPostRequestAuth("search", params, props.token).then((res) => {
       setDataSource(res.data);
     });
   }
 
   useEffect(() => {
-    doGetRequest("pers").then(
+    doGetRequestAut("pers", props.token).then(
       res => {
         setUsers(
           res.data.map(row => ({
@@ -95,7 +95,7 @@ function Search(props) {
       key: 'dateWork',
     },
     {
-      title: 'Zeit',
+      title: 'Zeit (Stunden)',
       dataIndex: 'timeWork',
       key: 'timeWork',
     },
