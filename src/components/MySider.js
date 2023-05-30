@@ -2,7 +2,6 @@ import {useNavigate} from "react-router-dom";
 import React from 'react';
 import SideNav, {NavItem, NavIcon, NavText} from '@trendmicro/react-sidenav';
 import {CalendarOutlined, CompressOutlined, HomeOutlined, LogoutOutlined, SearchOutlined} from '@ant-design/icons';
-import {doPostRequest} from "../helper/RequestHelper";
 import {isAdmin, isATW} from "../helper/helpFunctions";
 
 function MySider(props) {
@@ -10,7 +9,6 @@ function MySider(props) {
 
   function handleLogout() {
     props.removeToken();
-    doPostRequest("logout");
   }
   return (
     <div>

@@ -13,9 +13,9 @@ function Authentication(props) {
 	function handleLogin() {
 		setIsLoading(true)
 		const params = {username: txtUsername, password: txtPassword};
-		doPostRequest("token", params).then((response) => {
+		doPostRequest("login", params).then((response) => {
 			setIsLoading(false)
-			props.setToken(response.data.access_token);
+			props.setToken(response.data.accessToken);
 			navigate("/")
 		}, error => {
 			setIsLoading(false)

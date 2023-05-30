@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 import locale from 'antd/es/date-picker/locale/de_DE';
 import {myToastError, myToastSuccess} from "../helper/ToastHelper";
-import {doGetRequest, doPutRequest} from "../helper/RequestHelper";
+import {doGetRequestAut, doPutRequest} from "../helper/RequestHelper";
 import {getUserToID} from "../helper/helpFunctions";
 
 const {TextArea} = Input;
@@ -113,7 +113,7 @@ function Planner(props) {
   }
 
   useEffect(() => {
-    doGetRequest("pers").then(
+    doGetRequestAut("pers", props.token).then(
       res => {
         setUsers(
           res.data.map(row => ({
@@ -124,7 +124,7 @@ function Planner(props) {
         );
       }
     );
-    doGetRequest("cities").then(
+    doGetRequestAut("cities", props.token).then(
       res => {
         setCities(
           res.data.map(row => ({

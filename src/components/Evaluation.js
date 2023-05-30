@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {Col, Row, Input, Button, Divider, Modal, Table, Popconfirm} from 'antd';
 import {DeleteOutlined, SaveOutlined} from "@ant-design/icons";
 import {myToastError, myToastSuccess} from "../helper/ToastHelper";
-import {doDeleteRequest, doGetRequest, doPostRequest} from "../helper/RequestHelper";
+import {doDeleteRequest, doGetRequest, doGetRequestBlob, doPostRequest} from "../helper/RequestHelper";
 import {useNavigate} from "react-router-dom";
 
 function Evaluation() {
@@ -12,6 +12,7 @@ function Evaluation() {
 
   function showFFModal() {
     setIsModalFFOpen(true);
+    loadCities();
   };
 
   function handleUpdateFF(e) {
@@ -39,6 +40,19 @@ function Evaluation() {
   function handleModalFFCancel() {
     setIsModalFFOpen(false);
   };
+
+  function handleFFAuswertung() {
+        doGetRequestBlob('file').then((response) => {
+      const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', response.headers['content-language']); //any other extension
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(downloadUrl)
+  });
+  }
 
 
   function loadCities() {
@@ -87,11 +101,6 @@ function Evaluation() {
     },
   ];
 
-  useEffect(() => {
-    loadCities();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <div>
       <Modal title="Feuerwehren Verwalten" open={isModalFFOpen} onCancel={handleModalFFCancel} footer={[
@@ -121,7 +130,7 @@ function Evaluation() {
       </Row>
       <Row>
         <Col span={24}>
-          <Button onClick={() => console.log('bbb')} className="ffInputFull marginButton" type="primary">Jahresauswertung Feuerwehren</Button>
+          <Button onClick={() => handleFFAuswertung()} className="ffInputFull marginButton" type="primary">Jahresauswertung Feuerwehren</Button>
         </Col>
       </Row>
     </div>

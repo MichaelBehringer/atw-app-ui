@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://ffwemding.ddns.net:8080/"
+const url = "https://ffwemding.dynv6.net/"
 
 export async function doPostRequest(path, param) {
 	return axios.post(url+path, param)
@@ -8,6 +8,10 @@ export async function doPostRequest(path, param) {
 
 export async function doGetRequest(path) {
 	return axios.get(url+path)
+}
+
+export async function doGetRequestBlob(path) {
+	return axios.get(url+path, { responseType: 'blob' })
 }
 
 export async function doGetRequestAut(path, auth) {

@@ -16,7 +16,7 @@ function App(props) {
 	const [loggedPersNo, setLoggedPersNo] = useState();
 	const [loggedFunctionNo, setLoggedFunctionNo] = useState();
   useEffect(() => {
-    doGetRequestAut('loggedUser', props.token).then((res)=>{
+    doGetRequestAut('checkToken', props.token).then((res)=>{
       setLoggedPersNo(res.data.persNo)
       setLoggedFunctionNo(res.data.functionNo)
     })
@@ -31,7 +31,7 @@ function App(props) {
       <div className="mainContent">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/planner" element={<Planner loggedPersNo={loggedPersNo}/>} />
+          <Route path="/planner" element={<Planner token={props.token} loggedPersNo={loggedPersNo}/>} />
           <Route path="/evaluation" element={<Evaluation loggedFunctionNo={loggedFunctionNo}/>} />
           <Route path="/userManagement" element={<UserManagement loggedFunctionNo={loggedFunctionNo}/>} />
           <Route path="/search" element={<Search loggedFunctionNo={loggedFunctionNo} loggedPersNo={loggedPersNo}/>} />
