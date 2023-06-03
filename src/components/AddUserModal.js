@@ -3,7 +3,7 @@ import {useState} from "react";
 import Select from 'react-select';
 import {myToastError, myToastSuccess} from "../helper/ToastHelper";
 import {getWemding, isExternal} from "../helper/helpFunctions";
-import {doPutRequest} from "../helper/RequestHelper";
+import {doPutRequestAuth} from "../helper/RequestHelper";
 
 function AddUserModal(props) {
 	const [selectedFunction, setSelectedFunction] = useState();
@@ -23,17 +23,19 @@ function AddUserModal(props) {
 			myToastError('Bitte alle Felder füllen');
 		} else {
 			const params = {functionNo: selectedFunction.value, cityNo: selectedCity.value, firstname: txtFirstname, lastname: txtLastname, password: txtPassword, username: txtUsername};
-			doPutRequest("createUser", params).then((e) => {
+			doPutRequestAuth("createUser", params, props.token).then((e) => {
+				console.log(e.status)
 				if (e.status === 200) {
 					myToastSuccess('Speichern erfolgreich');
 					props.handleModalAGWCancel();
 					props.loadUser()
-				} else if (e.status === 201) {
+				}}, error => {
+					if (error.response.status === 400) {
 					myToastError('Benutzername bereits vorhanden');
 				} else {
 					myToastError('Fehler beim speichern aufgetreten');
 				}
-			});
+				});
 		}
 	};
 

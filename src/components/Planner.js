@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 import locale from 'antd/es/date-picker/locale/de_DE';
 import {myToastError, myToastSuccess} from "../helper/ToastHelper";
-import {doGetRequestAut, doPutRequest} from "../helper/RequestHelper";
+import {doGetRequestAuth, doPutRequestAuth} from "../helper/RequestHelper";
 import {getUserToID} from "../helper/helpFunctions";
 
 const {TextArea} = Input;
@@ -52,7 +52,7 @@ function Planner(props) {
       myToastError('Bitte alle Felder füllen');
     } else {
       const params = {user: selectedUser.value, arbeitszeit: txtArbeitszeit, dateWork: txtDate, bemerkung: txtModalNotice};
-      doPutRequest("createExtraEntry", params).then((e) => {
+      doPutRequestAuth("createExtraEntry", params, props.token).then((e) => {
         if (e.status === 200) {
           myToastSuccess('Speichern erfolgreich');
           setIsModalOpen(false);
@@ -76,7 +76,7 @@ function Planner(props) {
       myToastError('AGW, Feuerwehr, Datum und Arbeitszeit sind Pflichtfelder');
     } else {
       const params = {user: selectedUser.value, city: selectedCity.value, flaschenFuellen: txtFlaschenFuellen, flaschenFuellenNr: txtFlaschenFuellenNr, flaschenTUEV: txtFlaschenTUEV, flaschenTUEVNr: txtFlaschenTUEVNr, maskenPruefen: txtMaskenPruefen, maskenPruefenNr: txtMaskenPruefenNr, maskenReinigen: txtMaskenReinigen, maskenReinigenNr: txtMaskenReinigenNr, laPruefen: txtLAPruefen, laPruefenNr: txtLAPruefenNr, laReinigen: txtLAReinigen, laReinigenNr: txtLAReinigenNr, geraetePruefen: txtGereatePruefen, geraetePruefenNr: txtGereatePruefenNr, geraeteReinigen: txtGereateReinigen, geraeteReinigenNr: txtGereateReinigenNr, arbeitszeit: txtArbeitszeit, dateWork: txtDate};
-      doPutRequest("createEntry", params).then((e) => {
+      doPutRequestAuth("createEntry", params, props.token).then((e) => {
         if (e.status === 200) {
           myToastSuccess('Speichern erfolgreich');
         } else {
@@ -113,7 +113,7 @@ function Planner(props) {
   }
 
   useEffect(() => {
-    doGetRequestAut("pers", props.token).then(
+    doGetRequestAuth("pers", props.token).then(
       res => {
         setUsers(
           res.data.map(row => ({
@@ -124,7 +124,7 @@ function Planner(props) {
         );
       }
     );
-    doGetRequestAut("cities", props.token).then(
+    doGetRequestAuth("cities", props.token).then(
       res => {
         setCities(
           res.data.map(row => ({

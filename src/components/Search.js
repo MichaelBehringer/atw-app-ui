@@ -5,7 +5,7 @@ import {Button, Input, InputNumber, Modal, Table} from 'antd';
 import Select from 'react-select';
 import 'dayjs/locale/de';
 import {myToastError, myToastSuccess} from "../helper/ToastHelper";
-import {doDeleteRequest, doGetRequestAut, doPostRequest, doPostRequestAuth} from "../helper/RequestHelper";
+import {doDeleteRequestAuth, doGetRequestAuth, doPostRequestAuth} from "../helper/RequestHelper";
 import {getUserToID, isAdmin} from "../helper/helpFunctions";
 
 function Search(props) {
@@ -20,8 +20,8 @@ function Search(props) {
     setSelectedData(e);
   };
   function handleOk() {
-      const params = {city: selectedData?.city, flaschenFuellen: selectedData?.flaschenFuellen, flaschenTUEV: selectedData?.flaschenTUEV, maskenPruefen: selectedData?.maskenPruefen, maskenReinigen: selectedData?.maskenReinigen, laPruefen: selectedData?.laPruefen, laReinigen: selectedData?.laReinigen, geraetePruefen: selectedData?.gereatPruefen, geraeteReinigen: selectedData?.gereatReinigen, arbeitszeit: selectedData?.timeWork, bemerkung: selectedData?.bemerkung, dataNo: selectedData.key};
-      doPostRequest("updateEntry", params).then((res) => {
+      const params = {flaschenFuellen: selectedData?.flaschenFuellen, flaschenTUEV: selectedData?.flaschenTUEV, maskenPruefen: selectedData?.maskenPruefen, maskenReinigen: selectedData?.maskenReinigen, laPruefen: selectedData?.laPruefen, laReinigen: selectedData?.laReinigen, geraetePruefen: selectedData?.gereatPruefen, geraeteReinigen: selectedData?.gereatReinigen, arbeitszeit: selectedData?.timeWork, bemerkung: selectedData?.bemerkung, dataNo: selectedData.key};
+      doPostRequestAuth("updateEntry", params, props.token).then((res) => {
         if (res.status === 200) {
           myToastSuccess('Update erfolgreich');
         } else {
@@ -32,8 +32,8 @@ function Search(props) {
       setIsModalOpen(false);
   };
   function handleDelete() {
-      const params = {data: {dataNo: selectedData.key}};
-      doDeleteRequest("deleteEntry", params).then((res) => {
+      const params = {dataNo: selectedData.key};
+      doDeleteRequestAuth("deleteEntry", params, props.token).then((res) => {
         if (res.status === 200) {
           myToastSuccess('Löschen erfolgreich');
         } else {
@@ -60,7 +60,7 @@ function Search(props) {
   }
 
   useEffect(() => {
-    doGetRequestAut("pers", props.token).then(
+    doGetRequestAuth("pers", props.token).then(
       res => {
         setUsers(
           res.data.map(row => ({

@@ -1,13 +1,13 @@
 import {Button, Col, Input, Popconfirm, Row, Table} from "antd";
 import {useEffect, useState} from "react";
-import {doDeleteRequest, doGetRequest, doPostRequest} from "../helper/RequestHelper";
+import {doDeleteRequestAuth, doGetRequestAuth, doPostRequestAuth} from "../helper/RequestHelper";
 import {myToastError, myToastSuccess} from "../helper/ToastHelper";
 import {DeleteOutlined, SaveOutlined} from "@ant-design/icons";
 import Select from 'react-select';
 import {isExternal} from "../helper/helpFunctions";
 import AddUserModal from "./AddUserModal";
 
-function UserManagement() {
+function UserManagement(props) {
   const [users, setUsers] = useState([]);
   const [cities, setCities] = useState([]);
   const [functions, setFunctions] = useState([]);
@@ -22,7 +22,7 @@ function UserManagement() {
   };
 
   function loadUser() {
-    doGetRequest("persExtra").then(
+    doGetRequestAuth("persExtra", props.token).then(
       res => {
         setUsers(
           res.data.map(row => ({
@@ -41,7 +41,7 @@ function UserManagement() {
   }
 
   function loadCities() {
-    doGetRequest("cities").then(
+    doGetRequestAuth("cities", props.token).then(
       res => {
         setCities(
           res.data.map(row => ({
@@ -54,7 +54,7 @@ function UserManagement() {
   }
 
   function loadFunction() {
-    doGetRequest("function").then(
+    doGetRequestAuth("function", props.token).then(
       res => {
         setFunctions(
           res.data.map(row => ({
@@ -67,7 +67,7 @@ function UserManagement() {
   }
 
   function handleUpdateUser(e) {
-    doPostRequest("updateUser", e).then((ret) => {
+    doPostRequestAuth("updateUser", e, props.token).then((ret) => {
       if (ret.status === 200) {
         myToastSuccess('Speichern erfolgreich');
       } else {
@@ -77,8 +77,8 @@ function UserManagement() {
   }
 
   function handleDeleteUser(e) {
-    const params = {data: {userNo: e.key}};
-    doDeleteRequest("deleteUser", params).then((res) => {
+    const params = {userNo: e.key};
+    doDeleteRequestAuth("deleteUser", params, props.token).then((res) => {
       if (res.status === 200) {
         myToastSuccess('Löschen erfolgreich');
       } else {
@@ -185,7 +185,7 @@ function UserManagement() {
 
   return (
     <div>
-      <AddUserModal isModalAGWOpen={isModalAGWOpen} handleModalAGWCancel={handleModalAGWCancel} optionsFunctions={optionsFunctions} optionsCities={optionsCities} loadUser={loadUser}/>
+      <AddUserModal token={props.token} isModalAGWOpen={isModalAGWOpen} handleModalAGWCancel={handleModalAGWCancel} optionsFunctions={optionsFunctions} optionsCities={optionsCities} loadUser={loadUser}/>
       <Row>
         <Col span={12}>
         <p>Benutzerverwaltung</p>

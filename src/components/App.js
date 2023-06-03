@@ -9,14 +9,14 @@ import MySider from "./MySider";
 import Home from "./Home";
 import Evaluation from "./Evaluation";
 import Search from "./Search";
-import {doGetRequestAut} from "../helper/RequestHelper";
+import {doGetRequestAuth} from "../helper/RequestHelper";
 import UserManagement from "./UserManagement";
 
 function App(props) {
 	const [loggedPersNo, setLoggedPersNo] = useState();
 	const [loggedFunctionNo, setLoggedFunctionNo] = useState();
   useEffect(() => {
-    doGetRequestAut('checkToken', props.token).then((res)=>{
+    doGetRequestAuth('checkToken', props.token).then((res)=>{
       setLoggedPersNo(res.data.persNo)
       setLoggedFunctionNo(res.data.functionNo)
     })
@@ -32,8 +32,8 @@ function App(props) {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/planner" element={<Planner token={props.token} loggedPersNo={loggedPersNo}/>} />
-          <Route path="/evaluation" element={<Evaluation loggedFunctionNo={loggedFunctionNo}/>} />
-          <Route path="/userManagement" element={<UserManagement loggedFunctionNo={loggedFunctionNo}/>} />
+          <Route path="/evaluation" element={<Evaluation token={props.token} loggedFunctionNo={loggedFunctionNo}/>} />
+          <Route path="/userManagement" element={<UserManagement token={props.token} loggedFunctionNo={loggedFunctionNo}/>} />
           <Route path="/search" element={<Search token={props.token} loggedFunctionNo={loggedFunctionNo} loggedPersNo={loggedPersNo}/>} />
         </Routes>
       </div>

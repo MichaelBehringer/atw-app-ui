@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import {Col, Row, Input, Button, Divider, Modal, Table, Popconfirm} from 'antd';
 import {DeleteOutlined, SaveOutlined} from "@ant-design/icons";
 import {myToastError, myToastSuccess} from "../helper/ToastHelper";
-import {doDeleteRequest, doGetRequest, doGetRequestBlob, doPostRequest} from "../helper/RequestHelper";
+import {doDeleteRequestAuth, doGetRequestAuth, doGetRequestBlob, doPostRequestAuth} from "../helper/RequestHelper";
 import {useNavigate} from "react-router-dom";
 
-function Evaluation() {
+function Evaluation(props) {
   const [isModalFFOpen, setIsModalFFOpen] = useState(false);
   const [cities, setCities] = useState([]);
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ function Evaluation() {
   };
 
   function handleUpdateFF(e) {
-    doPostRequest("updateCity", e).then((ret) => {
+    doPostRequestAuth("updateCity", e, props.token).then((ret) => {
       if (ret.status === 200) {
         myToastSuccess('Speichern erfolgreich');
       } else {
@@ -26,8 +26,8 @@ function Evaluation() {
   }
 
   function handleDeleteFF(e) {
-    const params = {data: {cityNo: e.key}};
-    doDeleteRequest("deleteCity", params).then((res) => {
+    const params = {cityNo: e.key};
+    doDeleteRequestAuth("deleteCity", params, props.token).then((res) => {
       if (res.status === 200) {
         myToastSuccess('Löschen erfolgreich');
       } else {
@@ -56,7 +56,7 @@ function Evaluation() {
 
 
   function loadCities() {
-    doGetRequest("cities").then(
+    doGetRequestAuth("cities", props.token).then(
       res => {
         setCities(
           res.data.map(row => ({
